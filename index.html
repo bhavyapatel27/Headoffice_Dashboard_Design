@@ -915,7 +915,6 @@
       <thead>
         <tr>
           <th onclick="sortTable('name')">Branch Name &#8597;</th>
-          <th onclick="sortTable('pmr')">PMR System &#8597;</th>
           <th onclick="sortTable('orders')">Orders Today &#8597;</th>
           <th onclick="sortTable('spend')">MTD Spend &#8597;</th>
           <th onclick="sortTable('topSupplier')">Top Supplier</th>
@@ -1070,7 +1069,7 @@
     const pageItems = currentFilteredList.slice(startIndex, endIndex);
 
     if (pageItems.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--muted)">No matching branches found</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--muted)">No matching branches found</td></tr>`;
     } else {
       tbody.innerHTML = pageItems.map(b => {
         const statusBadge = b.status === 'active'
@@ -1095,7 +1094,6 @@
               </a>
             </div>
           </td>
-          <td style="color:var(--ink);font-weight:600;font-size:12px;">${b.pmr}</td>
           <td style="font-weight:700">${b.orders > 0 ? b.orders : '<span style="color:var(--muted)">—</span>'}</td>
           <td style="font-weight:700;color:var(--ink)">${spendStr}</td>
           <td style="font-size:12px;font-weight:600;color:var(--ink);">${b.topSupplier}</td>
@@ -1149,7 +1147,6 @@
     const term = q.trim().toLowerCase();
     currentFilteredList = branches.filter(b =>
       b.name.toLowerCase().includes(term) ||
-      b.pmr.toLowerCase().includes(term) ||
       b.topSupplier.toLowerCase().includes(term)
     );
     currentPage = 1;
@@ -1161,7 +1158,7 @@
       sortDirection *= -1;
     } else {
       sortField = key;
-      sortDirection = (key === 'name' || key === 'pmr') ? 1 : -1;
+      sortDirection = (key === 'name') ? 1 : -1;
     }
 
     currentFilteredList.sort((a, b) => {
@@ -1200,7 +1197,7 @@
           <span style="color:var(--green)">&#127978;</span>
           <span>${b.name}</span>
         </div>
-        <span class="search-item-badge">${b.pmr} &bull; £${b.spend.toLocaleString()}</span>
+        <span class="search-item-badge">Spend MTD: £${b.spend.toLocaleString()}</span>
       </div>
     `).join('');
   }
@@ -1403,7 +1400,7 @@
     if (!b) return;
 
     document.getElementById('drawerBranchName').textContent = b.name;
-    document.getElementById('drawerBranchSub').textContent = `PMR System: ${b.pmr}  |  Site Status: ${b.status.toUpperCase()}`;
+    document.getElementById('drawerBranchSub').textContent = `Branch Status: ${b.status.toUpperCase()}  |  Group Branch`;
 
     document.getElementById('drawerKpiRow').innerHTML = [
       { label:'Orders Today', value: b.orders||'0', sub:'Transmitted' },
